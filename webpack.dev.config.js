@@ -14,23 +14,18 @@ module.exports = merge(common, {
   output: {
     filename: "js/[name].js",
     path: path.resolve(__dirname, "./dist"),
-    publicPath: '/admin/',
   },
   target: "web",
 
   devServer: {
     host: "localhost",
     port: 6008,
-    // publicPath: '/admin/',
-    // publicPath: path.resolve(__dirname, "./dist"),
     inline: true,
-    // contentBase: path.resolve(__dirname, "./dist"),
     stats: "errors-only",
     clientLogLevel: "none",
     compress: true,
     open: false,
     hot: true,
-    // hotOnly:true,
     historyApiFallback: true,
     noInfo: true,
     proxy: {

@@ -42,6 +42,7 @@
     "happypack": "^5.0.1",
     "html-webpack-plugin": "^5.3.1",
     "less-loader": "^5.0.0",
+    "postcss-less-loader": "^0.1.0-alpha.2",
     "postcss-px-to-viewport": "^1.1.1",
     "react-hot-loader": "^4.12.19",
     "style-loader": "^1.1.3",

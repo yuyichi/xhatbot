@@ -5,3 +5,25 @@ html {
 .windth100 {
   width: 100%;
 }
+
+:root:root {
+  --adm-color-primary: rgba(1, 84, 120, 1);
+}
+
+.adm-input {
+  border-color: rgba(121, 121, 121, 1);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 1);
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  font-size: 16px;
+  color: #7f7f7f;
+  height: 40px;
+  padding: 4px;
+}
+
+.adm-form-item-label {
+  font-weight: 650;
+  font-size: 16px;
+}
