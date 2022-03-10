@@ -1,8 +1,8 @@
-import { message } from "antd";
-import { removeEmptyObject } from "@util/common";
-import { getToken } from "@util/user";
+import { Toast } from 'antd-mobile';
+import { removeEmptyObject } from '@util/common';
+import { getToken } from '@util/user';
 // import { createBrowserHistory } from "history";
-export const baseUri = "/api/v1/admin";
+export const baseUri = '/api/v1/admin';
 // const history = createBrowserHistory();
 // (function (Env) {
 //   Env["daily"] = "daily";
@@ -10,10 +10,10 @@ export const baseUri = "/api/v1/admin";
 //   Env["prod"] = "prod";
 // })(Env || (Env = {}));
 interface Response<T> {
-  code: number;
+  errcode: number;
   count?: number;
   data: T;
-  msg: string;
+  errmsg: string;
 }
 export interface PageResult<T> {
   current: number;
@@ -22,27 +22,28 @@ export interface PageResult<T> {
 }
 
 export interface pageRequest {
-  page: number,
+  page: number;
   size: number;
 }
 
 const hostApi = {
-  local: "http://localhost:6008/",
-  dev: "https://aonetaskdevapi.daily.elenet.me",
+  local: 'http://localhost:6008/',
+  dev: 'https://aonetaskdevapi.daily.elenet.me',
   // daily: 'https://aonetaskdevapi.daily.elenet.me',
   // pre: 'https://aonetaskdevapi.daily.elenet.me',
   // prod: 'https://aonetaskdevapi.daily.elenet.me'
 };
 // console.log(process)
 // const baseUrl = hostApi[process.env.NODE_ENV];
-function request<T>(url: string, config: RequestInit): Promise<T> {
-  config.credentials = "include";
+const baseUrl = window.location.origin;
+function request<T>(url: string, config: RequestInit & {noJson?: boolean}): Promise<Response<T>> {
+  config.credentials = 'include';
   config.headers = {
-    'X-VICILEMON-LOGIN-TOKEN': getToken(),
+    'Authorization-Token': getToken(),
     ...config.headers,
-  }
-  return fetch(url, config)
-    .then((res: any) => {
+  };
+  return fetch(baseUrl + url, config)
+    .then((res) => {
       // if (!res.ok) {
       //   // 服务器异常返回
       //   throw Error();
@@ -53,7 +54,8 @@ function request<T>(url: string, config: RequestInit): Promise<T> {
         return res.json();
       }
       return res.json();
-    }).then((resJson: any) => {
+    })
+    .then<Response<T>>((resJson) => {
       // if (resJson.code !== 0) {
       //   // 项目内部认为的错误
       //   message.error(resJson.msg);
@@ -61,23 +63,29 @@ function request<T>(url: string, config: RequestInit): Promise<T> {
       // } else {
       //   return resJson;
       // }
-      if (resJson.code && resJson.code !== 0) {
-        if (resJson.code === 21003) { // token无效 返回登录页面
+      if (resJson.errcode && resJson.errcode !== 0) {
+        if (resJson.errcode === 400) {
+          // token无效 返回登录页面
           // history.push('/admin/login');
-          location.href = "/admin/login"; // 暂时用location.href跳转
+          location.href = '/admin/login'; // 暂时用location.href跳转
+        } else {
+          Toast.clear();
+          Toast.show({
+            content: resJson?.errmsg,
+          });
+          throw Error('');
         }
-        message.error(resJson.msg)
-        throw Error("");
       }
       return resJson;
-    }).catch((error: any) => {
+    })
+    .catch((error: any) => {
       throw error;
     });
 }
 
 const responseType = {
   blob: (url, req, fileName) => {
-    return fetch(url, req).then(async (res) => {
+    return fetch(url, req).then(async res => {
       const blobData = await res.blob();
       downBlob(blobData, fileName);
     });
@@ -89,9 +97,9 @@ const responseType = {
 
 const downBlob = (blobData, fileName) => {
   const blob = new Blob([blobData], {
-    type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8",
+    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8',
   });
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = window.URL.createObjectURL(blob);
   link.download = fileName;
   link.click();
@@ -110,37 +118,34 @@ const downBlob = (blobData, fileName) => {
 //     return responseType[String(config.responseType)](`${url}${query}`, req, config.fileName)
 //   }
 
-function get<R, S>(
-  url: string,
-  data?: R,
-  config?: RequestInit & { responseType: string },
-): Promise<S> {
-  const req = { method: "GET", ...config };
+function get<R, S>(url: string, data?: R, config?: RequestInit & { responseType: string }): Promise<Response<S>> {
+  const req = { method: 'GET', ...config };
   // 拼接 get 请求参数
-  let query = "";
+  let query = '';
   if (data) {
     Object.entries(removeEmptyObject(data)).forEach(([key, value], index) => {
-      query = query + (index === 0 ? "?" : "&");
+      query = query + (index === 0 ? '?' : '&');
       query += `${key}=${value}`;
     });
   }
-  return request(
-    `${url}${query}`,
-    req,
-  );
+  return request(`${url}${query}`, req);
 }
 
 // POST请求
-function post<R, S>(url: string, data?: R, config?: RequestInit): Promise<S> {
+function post<R, S>(url: string, data?: R, config?: RequestInit): Promise<Response<S>>  {
+  let formBody = null;
+  if(data) {
+    formBody = Object.entries(removeEmptyObject(data)).map(([key, value], index) => encodeURIComponent(key) + '=' + encodeURIComponent(value)).join('&');
+  }
   return request(url, {
-    body: JSON.stringify(data),
+    body: formBody,
     headers: {
-      "content-type": "application/json",
+      // 'content-type': 'application/json',
+      'content-type': 'application/x-www-form-urlencoded;charset=UTF-8',
     },
-    method: "POST",
+    method: 'POST',
     ...config,
   });
 }
-
 
 export { Response, get, post };

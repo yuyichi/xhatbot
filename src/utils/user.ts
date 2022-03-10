@@ -24,7 +24,7 @@ export function setLogin(user) {
 
 export function clearUser(history: any) {
   storgeUtil.remove(USER_INFO_KEY);
-  history.push("/admin/login");
+  history.push("/");
 }
 
 export function getUserInfo(): any | null {
@@ -44,7 +44,7 @@ export function getToken(): any | null {
   try {
     const value = storgeUtil.get(USER_INFO_KEY);
     if (value) {
-      return value.loginToken;
+      return value.authorization_token;
     }
     return null;
   } catch (err) {

@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=local webpack-dev-server --config webpack.dev.config.js",
-    "build-dev": "cross-env NODE_ENV=dev webpack --config webpack.prod.config.js",
+    "build-dev": "cross-env NODE_ENV=dev webpack --config webpack.dev.config.js",
     "build-test": "cross-env NODE_ENV=test webpack --config webpack.prod.config.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.prod.config.js",
     "lint": "tslint --project ."
@@ -58,10 +58,12 @@
   "dependencies": {
     "ahooks": "^2.10.3",
     "antd-mobile": "^5.0.0-rc.8",
+    "copy-to-clipboard": "^3.3.1",
     "history": "^4.7.2",
     "less": "^3.11.1",
+    "moment": "^2.29.1",
     "prop-types": "^15.7.2",
-    "query-string": "^7.0.0",
+    "query-string": "^7.1.0",
     "react": "^16.14.0",
     "react-dom": "^16.9.0",
     "react-loadable": "^5.5.0",

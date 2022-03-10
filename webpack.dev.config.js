@@ -14,6 +14,7 @@ module.exports = merge(common, {
   output: {
     filename: "js/[name].js",
     path: path.resolve(__dirname, "./dist"),
+    publicPath: '/', // require
   },
   target: "web",
 
@@ -27,10 +28,30 @@ module.exports = merge(common, {
     open: false,
     hot: true,
     historyApiFallback: true,
+    // historyApiFallback: {
+    //   // 使用正则匹配命中路由
+    //   rewrites: [
+    //     // // /user 开头的都返回 user.html
+    //     // { from: /^\/user/, to: '/user.html' },
+    //     // { from: /^\/game/, to: '/game.html' },
+    //     // 其它的都返回 index.html
+    //     { from: /./, to: '/index.html' },
+    //   ]
+    // },
     noInfo: true,
     proxy: {
-      "/api/v1": {
-        target: "https://vicilemon-test.codoclub.com",
+      "/user/api": {
+        target: "https://api.linkto.xin",
+        secure: true,
+        changeOrigin: true,
+      },
+      "/bot": {
+        target: "https://api.linkto.xin",
+        secure: true,
+        changeOrigin: true,
+      },
+      "/gro": {
+        target: "https://api.linkto.xin",
         secure: true,
         changeOrigin: true,
       },

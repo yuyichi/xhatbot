@@ -11,7 +11,6 @@ module.exports = merge(common, {
   output: {
     filename: "[name][chunkhash:8].js",
     path: path.resolve(__dirname, "./dist"),
-    publicPath: '/admin/',
   },
   optimization: {
     splitChunks: {

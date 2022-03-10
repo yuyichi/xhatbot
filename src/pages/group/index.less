@@ -1,0 +1,44 @@
+.group-container {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2vw;
+  width: 100vw;
+  padding-bottom: 120px;
+  //   height: 100vh;
+  background: #eee;
+  overflow: scroll;
+  .group-add-footer {
+    position: fixed;
+    box-sizing: border-box;
+    bottom: 0;
+    width: 100vw;
+    padding: 20px;
+    background-color: #fff;
+    z-index: 999;
+  }
+}
+
+.pop-body {
+  box-sizing: border-box;
+  height: 120px;
+  padding: 10px;
+  border-bottom: 2px dashed #eee;
+}
+
+.pop-header {
+  text-align: center;
+  font-size: 32px;
+  padding: 16px 16px;
+  font-weight: bold;
+}
+
+.pop-footer {
+  box-sizing: border-box;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+  padding: 24px 32px;
+}
