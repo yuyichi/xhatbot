@@ -52,7 +52,7 @@ const Index = (props: SelectPopProps) => {
       <Space direction="vertical" block>
         <Button
           block
-          color="primary"
+          color='warning'
           onClick={() => {
             setVisible(true);
           }}

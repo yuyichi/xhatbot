@@ -95,11 +95,12 @@ const basicColumns = [
 interface SelectDayProps {
   visible?: boolean;
   setVisible?: (value: boolean) => void;
+  onChange?: (value: any) => void;
   value?: any;
 }
 
 const SelectDay = (props: SelectDayProps) => {
-  const { visible, setVisible } = props;
+  const { visible, setVisible, onChange } = props;
 
   return (
     <Space align="center">
@@ -116,14 +117,14 @@ const SelectDay = (props: SelectDayProps) => {
         onClose={() => {
           setVisible(false);
         }}
-        value={props.value}
-        onConfirm={(value) => { console.log(value)}}
+        value={props?.value}
+        onConfirm={(value) => { onChange(value)}}
       >
         {(items: any[]) => {
           if (items.every(item => item === null)) {
             return '未选择';
           } else {
-            return items.map(item => item?.label ?? '未选择').join(' : ');
+            return items?.map(item => item?.label ?? '未选择').join(' : ');
           }
         }}
       </Picker>

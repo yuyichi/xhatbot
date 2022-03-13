@@ -36,13 +36,15 @@ const hostApi = {
 // console.log(process)
 // const baseUrl = hostApi[process.env.NODE_ENV];
 const baseUrl = window.location.origin;
-function request<T>(url: string, config: RequestInit & {noJson?: boolean}): Promise<Response<T>> {
-  config.credentials = 'include';
-  config.headers = {
+function request<T>(url: string, config: RequestInit & {noJson?: boolean, noBaseUrl?: boolean, noToken?: boolean}): Promise<Response<T>> {
+  // config.credentials = 'include';
+  config.headers = config.noToken ? {...config.headers} : {
     'Authorization-Token': getToken(),
     ...config.headers,
   };
-  return fetch(baseUrl + url, config)
+  // config.mode = 'no-cors';
+  const reqUrl = config.noBaseUrl ? url : baseUrl + url
+  return fetch(reqUrl, config)
     .then((res) => {
       // if (!res.ok) {
       //   // 服务器异常返回
@@ -51,6 +53,7 @@ function request<T>(url: string, config: RequestInit & {noJson?: boolean}): Prom
       if (config.noJson) {
         return res.text();
       } else if (!res.ok) {
+        console.log(res, 'response11');
         return res.json();
       }
       return res.json();
@@ -136,6 +139,9 @@ function post<R, S>(url: string, data?: R, config?: RequestInit): Promise<Respon
   let formBody = null;
   if(data) {
     formBody = Object.entries(removeEmptyObject(data)).map(([key, value], index) => encodeURIComponent(key) + '=' + encodeURIComponent(value)).join('&');
+  }
+  if (config?.headers) {
+    formBody = data;
   }
   return request(url, {
     body: formBody,
